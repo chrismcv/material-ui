@@ -75,7 +75,7 @@ const PopoverAnimationFromTop = React.createClass({
         opacity: 0,
         transform: 'scaleY(0)',
         transformOrigin: `${horizontal} ${targetOrigin.vertical}`,
-        position: 'fixed',
+        position: 'absolute',
         zIndex: this.state.muiTheme.zIndex.popover,
         transition: Transitions.easeOut('450ms', ['transform', 'opacity']),
         maxHeight: '100%',

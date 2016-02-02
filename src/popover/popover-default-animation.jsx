@@ -80,7 +80,7 @@ const PopoverDefaultAnimation = React.createClass({
         opacity: 0,
         transform: 'scale(0, 0)',
         transformOrigin: `${horizontal} ${targetOrigin.vertical}`,
-        position: 'fixed',
+        position: 'absolute',
         zIndex: this.state.muiTheme.zIndex.popover,
         transition: Transitions.easeOut('250ms', ['transform', 'opacity']),
         maxHeight: '100%',
