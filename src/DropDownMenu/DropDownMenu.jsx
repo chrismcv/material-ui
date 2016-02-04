@@ -427,6 +427,7 @@ const DropDownMenu = React.createClass({
             desktop={true}
             value={value}
             style={menuStyle}
+            animated={false}
           >
             {menuItemElements}
           </Menu>
