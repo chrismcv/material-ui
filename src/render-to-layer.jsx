@@ -125,12 +125,12 @@ const RenderToLayer = React.createClass({
     if (open) {
       if (!this._layer) {
         this._layer = document.createElement('div');
+        this._layer.style.position = 'absolute';
         document.body.appendChild(this._layer);
 
         if (this.props.useLayerForClickAway) {
           this._layer.addEventListener('touchstart', this.onClickAway);
           this._layer.addEventListener('click', this.onClickAway);
-          this._layer.style.position = 'absolute';
           this._layer.style.zIndex = this.state.muiTheme.zIndex.layer;
         } else {
           setTimeout(() => {
