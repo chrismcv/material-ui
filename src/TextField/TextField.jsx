@@ -294,6 +294,7 @@ const TextField = React.createClass({
       },
       floatingLabel: {
         color: hintColor,
+        pointerEvents: 'none',
       },
       input: {
         tapHighlightColor: 'rgba(0,0,0,0)',
@@ -466,7 +467,6 @@ const TextField = React.createClass({
         htmlFor={inputId}
         shrink={this.state.hasValue || this.state.isFocused}
         disabled={disabled}
-        onTouchTap={this.focus}
       >
         {floatingLabelText}
       </TextFieldLabel>
