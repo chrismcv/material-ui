@@ -7,7 +7,7 @@ import {
 import AppRoutes from './AppRoutes.jsx';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import {createHashHistory} from 'history';
-
+import {LookRoot} from 'react-look';
 //Helpers for debugging
 window.React = React;
 window.Perf = require('react-addons-perf');
@@ -23,10 +23,12 @@ injectTapEventPlugin();
  * https://github.com/rackt/react-router/blob/master/docs/guides/overview.md
  */
 ReactDOM.render(
+  <LookRoot>
   <Router
     history={useRouterHistory(createHashHistory)({queryKey: false})}
     onUpdate={() => window.scrollTo(0, 0)}
   >
     {AppRoutes}
   </Router>
+  </LookRoot>
 , document.getElementById('app'));

@@ -1,39 +1,44 @@
-import React from 'react';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
+import React, {Component} from 'react';
+//import PureRenderMixin from 'react-addons-pure-render-mixin';
 import PropTypes from './utils/prop-types';
 import Transitions from './styles/transitions';
 import getMuiTheme from './styles/getMuiTheme';
+import look, {StyleSheet} from 'react-look';
+const c = StyleSheet.combineStyles;
 
-function getStyles(props, state) {
-  const {
-    circle,
-    rounded,
-    transitionEnabled,
-    zDepth,
-  } = props;
+const styles = StyleSheet.create({
+  main: {
+    boxSizing: 'border-box',
+  },
+  stateBased: (props, state) => {
+    const {
+      circle,
+      rounded,
+      transitionEnabled,
+      zDepth,
+    } = props;
 
-  const {
-    baseTheme,
-    paper,
-  } = state.muiTheme;
+    const {
+      baseTheme,
+      paper,
+    } = state.muiTheme;
 
-  return {
-    root: {
+    return {
       color: paper.color,
       backgroundColor: paper.backgroundColor,
       transition: transitionEnabled && Transitions.easeOut(),
-      boxSizing: 'border-box',
       fontFamily: baseTheme.fontFamily,
       WebkitTapHighlightColor: 'rgba(0,0,0,0)', // Remove mobile color flashing (deprecated)
       boxShadow: paper.zDepthShadows[zDepth - 1], // No shadow for 0 depth papers
       borderRadius: circle ? '50%' : rounded ? '2px' : '0px',
-    },
-  };
-}
+    };
+  },
+  override: (props) => props.style,
+});
 
-const Paper = React.createClass({
+class Paper extends Component {
 
-  propTypes: {
+  static propTypes = {
     /**
      * Children passed into the paper element.
      */
@@ -43,6 +48,11 @@ const Paper = React.createClass({
      * Set to true to generate a circlular paper container.
      */
     circle: React.PropTypes.bool,
+
+    /**
+     * className as per standard react convention
+     */
+    className: React.PropTypes.string,
 
     /**
      * By default, the paper container will have a border radius.
@@ -64,67 +74,55 @@ const Paper = React.createClass({
      * This number represents the zDepth of the paper shadow.
      */
     zDepth: PropTypes.zDepth,
-  },
+  };
 
-  contextTypes: {
+  static contextTypes = {
     muiTheme: React.PropTypes.object,
-  },
+  };
 
-  childContextTypes: {
+  static childContextTypes = {
     muiTheme: React.PropTypes.object,
-  },
+  };
 
-  mixins: [
-    PureRenderMixin,
-  ],
 
-  getDefaultProps() {
-    return {
-      circle: false,
-      rounded: true,
-      transitionEnabled: true,
-      zDepth: 1,
-    };
-  },
+  static defaultProps = {
+    circle: false,
+    rounded: true,
+    transitionEnabled: true,
+    zDepth: 1,
+  };
 
-  getInitialState() {
-    return {
-      muiTheme: this.context.muiTheme || getMuiTheme(),
-    };
-  },
+  state = {
+    muiTheme: this.context.muiTheme || getMuiTheme(),
+  };
 
   getChildContext() {
     return {
       muiTheme: this.state.muiTheme,
     };
-  },
+  }
 
   componentWillReceiveProps(nextProps, nextContext) {
     this.setState({
       muiTheme: nextContext.muiTheme || this.state.muiTheme,
     });
-  },
+  }
 
   render() {
     const {
       children,
-      style,
+      className,
+      style, // we don't want inline style to be applied directly?
       ...other,
     } = this.props;
 
-    const {
-      prepareStyles,
-    } = this.state.muiTheme;
-
-    const styles = getStyles(this.props, this.state);
-
     return (
-      <div {...other} style={prepareStyles(Object.assign(styles.root, style))}>
+      <div {...other} className={c(styles.main, styles.stateBased, className, styles.override)}>
         {children}
       </div>
     );
-  },
+  }
 
-});
+}
 
-export default Paper;
+export default look(Paper);
