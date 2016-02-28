@@ -7,7 +7,7 @@ import {
 import AppRoutes from './AppRoutes.jsx';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import {createHashHistory} from 'history';
-import {LookRoot} from 'react-look';
+import {LookRoot, Plugins, Presets} from 'react-look';
 //Helpers for debugging
 window.React = React;
 window.Perf = require('react-addons-perf');
@@ -22,8 +22,14 @@ injectTapEventPlugin();
  * Render the main app component. You can read more about the react-router here:
  * https://github.com/rackt/react-router/blob/master/docs/guides/overview.md
  */
+
+const config = Presets['react-dom'];
+config.plugins.push(Plugins.friendlyClassName)
+config.plugins.push(Plugins.statefulValue);
+config.plugins.push(Plugins.prefixer);
+
 ReactDOM.render(
-  <LookRoot>
+  <LookRoot config={config}>
   <Router
     history={useRouterHistory(createHashHistory)({queryKey: false})}
     onUpdate={() => window.scrollTo(0, 0)}

@@ -7,33 +7,16 @@ import look, {StyleSheet} from 'react-look';
 const c = StyleSheet.combineStyles;
 
 const styles = StyleSheet.create({
-  main: {
+  root: {
+    backgroundColor: (props, {muiTheme}) => muiTheme.paper.backgroundColor,
+    borderRadius: ({circle, rounded}) => circle ? '50%' : rounded ? '2px' : '0px',
+    boxShadow: ({zDepth}, {muiTheme}) => muiTheme.paper.zDepthShadows[zDepth - 1], // No shadow for 0 depth papers
     boxSizing: 'border-box',
+    color: (props, {muiTheme}) => muiTheme.paper.color,
+    fontFamily: (props, {muiTheme}) => muiTheme.baseTheme.fontFamily,
+    transition: ({transitionEnabled}) => transitionEnabled && Transitions.easeOut(),
+    WebkitTapHighlightColor: 'rgba(0,0,0,0)', // Remove mobile color flashing (deprecated)
   },
-  stateBased: (props, state) => {
-    const {
-      circle,
-      rounded,
-      transitionEnabled,
-      zDepth,
-    } = props;
-
-    const {
-      baseTheme,
-      paper,
-    } = state.muiTheme;
-
-    return {
-      color: paper.color,
-      backgroundColor: paper.backgroundColor,
-      transition: transitionEnabled && Transitions.easeOut(),
-      fontFamily: baseTheme.fontFamily,
-      WebkitTapHighlightColor: 'rgba(0,0,0,0)', // Remove mobile color flashing (deprecated)
-      boxShadow: paper.zDepthShadows[zDepth - 1], // No shadow for 0 depth papers
-      borderRadius: circle ? '50%' : rounded ? '2px' : '0px',
-    };
-  },
-  override: (props) => props.style,
 });
 
 class Paper extends Component {
@@ -112,12 +95,11 @@ class Paper extends Component {
     const {
       children,
       className,
-      style, // we don't want inline style to be applied directly?
       ...other,
     } = this.props;
 
     return (
-      <div {...other} className={c(styles.main, styles.stateBased, className, styles.override)}>
+      <div {...other} className={c(styles.root, className)}>
         {children}
       </div>
     );
@@ -125,4 +107,5 @@ class Paper extends Component {
 
 }
 
+export {Paper};
 export default look(Paper);
