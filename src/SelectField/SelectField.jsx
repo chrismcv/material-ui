@@ -209,10 +209,8 @@ const SelectField = React.createClass({
 
   // Hack to refocus field after closing the dropdown
   _onRequestClose() {
-    setTimeout(() => {
-      let el = this.refs.field._getInputNode();
-      el.focus();
-    }, 700);
+    let el = this.refs.field._getInputNode();
+    el.focus();
   },
 
   render() {

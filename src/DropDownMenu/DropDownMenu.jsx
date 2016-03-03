@@ -324,20 +324,21 @@ const DropDownMenu = React.createClass({
       onChange(e, key, payload);
     }
 
-    this._onMenuRequestClose();
     this.setState({
       selectedIndex: key,
       open: false,
-    });
+    }, this._onMenuRequestClose);
   },
 
   _onMenuRequestClose() {
+    let callback = undefined;
     if (this.props.onRequestClose)
-      this.props.onRequestClose('menuClosed');
+      callback = () => this.props.onRequestClose('menuClosed');
+
     this.setState({
       open: false,
       anchorEl: null,
-    });
+    }, callback);
   },
 
   _isControlled() {
@@ -408,22 +409,24 @@ const DropDownMenu = React.createClass({
     }
 
     let index = 0;
-    const menuItemElements = menuItems
-      ? menuItems.map((item, idx) => (
-        <MenuItem
-          key={idx}
-          primaryText={item[displayMember || 'text']}
-          value={item[valueMember]}
-          onTouchTap={this._onMenuItemTouchTap.bind(this, idx, item)}
-        />
-      ))
-      : React.Children.map(children, child => {
-        const clone = React.cloneElement(child, {
-          onTouchTap: this._onMenuItemTouchTap.bind(this, index, child.props.value),
-        }, child.props.children);
-        index += 1;
-        return clone;
-      });
+    let menuItemElements
+    if (open)
+      menuItemElements = menuItems
+        ? menuItems.map((item, idx) => (
+          <MenuItem
+            key={idx}
+            primaryText={item[displayMember || 'text']}
+            value={item[valueMember]}
+            onTouchTap={this._onMenuItemTouchTap.bind(this, idx, item)}
+          />
+        ))
+        : React.Children.map(children, child => {
+          const clone = React.cloneElement(child, {
+            onTouchTap: this._onMenuItemTouchTap.bind(this, index, child.props.value),
+          }, child.props.children);
+          index += 1;
+          return clone;
+        });
 
     let popoverStyle;
     if (anchorEl && !autoWidth) {
